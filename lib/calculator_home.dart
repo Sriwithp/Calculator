@@ -1,16 +1,10 @@
+import 'package:calculator/provider/calculator_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
+import 'package:provider/provider.dart';
 
-class CalculatorHome extends StatefulWidget {
+class CalculatorHome extends StatelessWidget {
   const CalculatorHome({super.key});
 
-  @override
-  State<CalculatorHome> createState() => _CalculatorHomeState();
-}
-
-class _CalculatorHomeState extends State<CalculatorHome> {
-  var expression = "";
-  var result = "0";
   @override
   Widget build(BuildContext context) {
     List padValue = [
@@ -39,6 +33,18 @@ class _CalculatorHomeState extends State<CalculatorHome> {
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Calculator"),
+          actions: [
+            InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, "/history");
+                },
+                child: const Icon(Icons.history)),
+            const SizedBox(width: 10)
+          ],
+          backgroundColor: Colors.pink),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,15 +60,16 @@ class _CalculatorHomeState extends State<CalculatorHome> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
+                SizedBox(
                   height: 20.0,
-                  child: Text(expression, style: const TextStyle(fontSize: 22)),
+                  child: Text(context.watch<CalculatorProvider>().expression,
+                      style: const TextStyle(fontSize: 22)),
                 ),
                 const SizedBox(height: 10.0),
                 const Divider(),
                 const SizedBox(height: 10.0),
                 Text(
-                  result,
+                  context.watch<CalculatorProvider>().result,
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
               ],
@@ -93,7 +100,9 @@ class _CalculatorHomeState extends State<CalculatorHome> {
                           ? const MaterialStatePropertyAll(Colors.green)
                           : null),
                   onPressed: () {
-                    addInput(padValue[index]);
+                    context
+                        .read<CalculatorProvider>()
+                        .addInput(padValue[index]);
                   },
                   child: Text(padValue[index],
                       style: const TextStyle(
@@ -107,48 +116,5 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         ],
       ),
     );
-  }
-
-  void addInput(String value) {
-    if (value == "AC") {
-      expression = "";
-      result = "0";
-    } else if (value == "⌫") {
-      expression = expression.substring(0, expression.length - 1);
-    } else if (value == "=") {
-      if (expression.endsWith("+") ||
-          expression.endsWith("-") ||
-          expression.endsWith("x") ||
-          expression.endsWith("÷")) {
-        expression = expression.substring(0, expression.length - 1);
-      }
-    }
-    //else if (expression.startsWith("%") ||
-    //     expression.startsWith("x") ||
-    //     expression.startsWith("÷")) {
-
-    // }
-    else {
-      expression += value;
-    }
-    setState(() {
-      if (expression.isNotEmpty &&
-              !expression.endsWith("+") &&
-              !expression.endsWith("-") &&
-              !expression.endsWith("x") &&
-              !expression.endsWith("÷") ||
-          expression.endsWith("%")) {
-        var expressions = expression
-            .replaceAll("x", "*")
-            .replaceAll("÷", "/")
-            .replaceAll("%", "/100");
-        Parser parser = Parser();
-        Expression exp = parser.parse(expressions);
-        result = exp.evaluate(EvaluationType.REAL, ContextModel()).toString();
-        if (result.endsWith(".0")) {
-          result = result.substring(0, result.length - 2);
-        }
-      }
-    });
   }
 }

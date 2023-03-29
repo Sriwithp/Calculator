@@ -1,8 +1,14 @@
 import 'package:calculator/calculator_home.dart';
+import 'package:calculator/history.dart';
+import 'package:calculator/provider/calculator_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => CalculatorProvider())],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -12,13 +18,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
-        // useMaterial3: true,
-      ),
-      home: const CalculatorHome(),
-    );
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+          // useMaterial3: true,
+        ),
+        initialRoute: "/",
+        routes: {
+          "/": (context) => const CalculatorHome(),
+          "/history": (context) => const History(),
+        });
   }
 }

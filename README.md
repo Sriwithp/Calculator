@@ -1,7 +1,7 @@
 # calculator #simple_calculator #Simple Calculator
 
 A new Flutter project.
-Simple Calculator with math_expression Dependency.
+Simple Calculator by using Provider, Math_Expression and Shared_Preferences 
 
 with this we can perform Adition, Substraction, Multiplication, Divison, Percentage and Factorial of the numbers.
 
