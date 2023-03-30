@@ -103,6 +103,10 @@ class CalculatorHome extends StatelessWidget {
                     context
                         .read<CalculatorProvider>()
                         .addInput(padValue[index]);
+                    if (padValue[index] == "=") {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Add to history")));
+                    }
                   },
                   child: Text(padValue[index],
                       style: const TextStyle(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 class CalculatorProvider with ChangeNotifier {
   var expression = "";
   var result = "0";
+  final history = Hive.box("History");
 
   void addInput(String value) {
     if (value == "AC") {
@@ -18,6 +20,7 @@ class CalculatorProvider with ChangeNotifier {
           expression.endsWith("÷")) {
         expression = expression.substring(0, expression.length - 1);
       }
+      history.add({"ex": expression, "result": result});
     } else {
       expression += value;
     }
@@ -40,5 +43,13 @@ class CalculatorProvider with ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+   getHistory() {
+    final data = history.keys.map((key) {
+      var item = history.get(key);
+      return {"key": key, "result": item["result"], "ex": item["ex"]};
+    }).toList();
+    return data.reversed.toList();
   }
 }
