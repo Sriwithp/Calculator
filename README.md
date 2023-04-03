@@ -15,7 +15,7 @@ https://user-images.githubusercontent.com/66247499/229397685-47b6bd9b-7638-4d89-
 
 
 
-\Thanks & Regards\
+Thanks & Regards\
 Sriramu P. \
 +91-8880002767\
 Unemployee
